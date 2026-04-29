@@ -30,7 +30,7 @@ var animationStarted = false;
 // 2. For quick testing, set COUNTDOWN_TEST_SECONDS to a number.
 // 3. For the real unlock time, keep COUNTDOWN_TEST_SECONDS as null.
 //    The +08:00 timezone makes this exactly Philippine Time.
-var COUNTDOWN_ENABLED = true;
+var COUNTDOWN_ENABLED = false;
 var COUNTDOWN_TEST_SECONDS = null;
 var COUNTDOWN_TARGET_DATE = "2026-04-30T00:00:00+08:00";
 
