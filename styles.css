@@ -20,11 +20,15 @@ body {
 .birthday-stage {
   position: fixed;
   inset: 0;
+  background: #f7a11a;
+  overflow: hidden;
+}
+
+.birthday-stage.is-greeting {
   background-image: url("TANDUAY.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  overflow: hidden;
 }
 
 .birthday-stage.is-hidden {
@@ -46,6 +50,10 @@ body {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+}
+
+.countdown-gate.is-disabled {
+  display: none;
 }
 
 .time-to {
@@ -186,6 +194,10 @@ body {
   transform: translate(-50%, -50%);
 }
 
+#video:empty {
+  display: none;
+}
+
 #video::before,
 #video::after {
   position: absolute;
@@ -280,9 +292,9 @@ body {
 .merrywrap {
   position: absolute;
   inset: 0;
-  background-color: #d44;
+  background-color: #f7a11a;
   background-image:
-    linear-gradient(rgba(212, 68, 68, 0.22), rgba(212, 68, 68, 0.38)),
+    linear-gradient(rgba(255, 179, 52, 0.18), rgba(255, 130, 20, 0.2)),
     url("gradient-yellow-star-background_52683-153241.avif");
   background-position: center;
   background-size: cover;
@@ -294,6 +306,11 @@ body {
   background-color: transparent;
   background-image: none;
   pointer-events: none;
+}
+
+.merrywrap.is-revealed .reward-title,
+.merrywrap.is-revealed .giftbox {
+  display: none;
 }
 
 .reward-title {
@@ -337,6 +354,10 @@ body {
   content: "Click Me!";
   font-size: 24px;
   text-align: center;
+  animation: clickMePulse 0.9s ease-in-out infinite alternate;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.35),
+    0 0 16px rgba(255, 226, 122, 0.95);
   transform: rotate(-20deg);
   transform-origin: 0 0;
 }
@@ -417,7 +438,7 @@ body {
 .giftbox .box::after {
   width: 100%;
   height: 30px;
-  background: rgba(0, 0, 0, 0.2);
+  background: transparent;
 }
 
 .icons {
@@ -427,6 +448,14 @@ body {
   width: min(92vw, 720px);
   height: auto;
   transform: rotate(-12deg);
+  transition: top 0.9s ease, left 0.9s ease, transform 0.9s ease;
+  z-index: 6;
+}
+
+.merrywrap .icons.is-centered {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg) scale(1.05);
 }
 
 .icons .row {
@@ -637,6 +666,18 @@ body {
   100% {
     opacity: 0;
     transform: translateY(100%);
+  }
+}
+
+@keyframes clickMePulse {
+  from {
+    color: #fff;
+    transform: translateY(0) rotate(-20deg) scale(1);
+  }
+
+  to {
+    color: #ffe27a;
+    transform: translateY(-12px) rotate(-14deg) scale(1.14);
   }
 }
 

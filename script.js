@@ -26,15 +26,64 @@ var my;
 var animationStarted = false;
 var jumpscareStarted = false;
 var screamPlayCount = 0;
+var birthdayStageStarted = false;
+var greetingPositionTimer = null;
 
 // Countdown gate toggle guide:
 // 1. Set this to false to skip the timer and show the gift immediately.
 // 2. For quick testing, set COUNTDOWN_TEST_SECONDS to a number.
 // 3. For the real unlock time, keep COUNTDOWN_TEST_SECONDS as null.
 //    The +08:00 timezone makes this exactly Philippine Time.
-var COUNTDOWN_ENABLED = true;
+var COUNTDOWN_ENABLED = false;
 var COUNTDOWN_TEST_SECONDS = null;
 var COUNTDOWN_TARGET_DATE = "2026-04-30T00:00:00+08:00";
+
+function resetBirthdayStage() {
+  var birthdayStage = document.getElementById("birthdayStage");
+  var merrywrap = document.getElementById("merrywrap");
+  var surpriseButton = document.getElementById("surpriseButton");
+  var videoFrame = document.querySelector("#video iframe");
+  var jumpscare = document.getElementById("jumpscare");
+  var audio = document.getElementById("screamAudio");
+
+  if (!merrywrap) {
+    return;
+  }
+
+  var icons = merrywrap.querySelector(".icons");
+
+  if (greetingPositionTimer) {
+    clearTimeout(greetingPositionTimer);
+    greetingPositionTimer = null;
+  }
+
+  merrywrap.className = "merrywrap";
+  merrywrap.style.backgroundColor = "";
+  birthdayStage.classList.remove("is-greeting");
+  if (icons) {
+    icons.classList.add("is-centered");
+  }
+  jumpscareStarted = false;
+  screamPlayCount = 0;
+
+  if (videoFrame) {
+    videoFrame.remove();
+  }
+
+  if (surpriseButton) {
+    surpriseButton.classList.remove("is-ready");
+  }
+
+  if (jumpscare) {
+    jumpscare.classList.remove("is-active");
+    jumpscare.setAttribute("aria-hidden", "true");
+  }
+
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+  }
+}
 
 function resizeCanvas() {
   cw = window.innerWidth;
@@ -225,7 +274,15 @@ function loop() {
 }
 
 function reveal() {
+  var icons = document.querySelector(".icons");
+
+  document.getElementById("birthdayStage").classList.add("is-greeting");
   document.querySelector(".merrywrap").classList.add("is-revealed");
+
+  greetingPositionTimer = window.setTimeout(function () {
+    icons.classList.remove("is-centered");
+    greetingPositionTimer = null;
+  }, 3500);
 
   if (!animationStarted) {
     animationStarted = true;
@@ -322,7 +379,7 @@ function openBox() {
 
   function advance() {
     if (step === 1) {
-      box.removeEventListener("click", advance, false);
+      box.onclick = null;
     }
 
     stepClass(step);
@@ -336,7 +393,7 @@ function openBox() {
     step++;
   }
 
-  box.addEventListener("click", advance, false);
+  box.onclick = advance;
 }
 
 function formatCountdown(totalSeconds) {
@@ -356,13 +413,19 @@ function formatCountdown(totalSeconds) {
 }
 
 function startBirthdayStage() {
+  if (birthdayStageStarted) {
+    return;
+  }
+
+  birthdayStageStarted = true;
   document.getElementById("birthdayStage").classList.remove("is-hidden");
+  resetBirthdayStage();
   openBox();
 }
 
-function skipCountdownGate() {
+function skipCountdownGate(isDisabled) {
   var gate = document.getElementById("countdownGate");
-  gate.classList.add("is-hidden");
+  gate.classList.add(isDisabled ? "is-disabled" : "is-hidden");
   startBirthdayStage();
 }
 
@@ -372,7 +435,7 @@ function startCountdownGate() {
   var targetTime;
 
   if (!COUNTDOWN_ENABLED) {
-    skipCountdownGate();
+    skipCountdownGate(true);
     return;
   }
 
@@ -388,7 +451,9 @@ function startCountdownGate() {
     if (!Number.isFinite(diff) || diff <= 0) {
       clearInterval(intervalId);
       timer.textContent = "0d 0h 0m 0s";
-      window.setTimeout(skipCountdownGate, 450);
+      window.setTimeout(function () {
+        skipCountdownGate(false);
+      }, 450);
       return;
     }
 
@@ -434,3 +499,9 @@ document.addEventListener("touchmove", function (event) {
 });
 
 window.addEventListener("load", startCountdownGate);
+window.addEventListener("pageshow", function (event) {
+  if (event.persisted) {
+    birthdayStageStarted = false;
+    startCountdownGate();
+  }
+});
