@@ -24,6 +24,8 @@ var mousedown = false;
 var mx;
 var my;
 var animationStarted = false;
+var jumpscareStarted = false;
+var screamPlayCount = 0;
 
 // Countdown gate toggle guide:
 // 1. Set this to false to skip the timer and show the gift immediately.
@@ -244,6 +246,68 @@ function reveal() {
     ifrm.setAttribute("allowfullscreen", "");
     document.querySelector("#video").appendChild(ifrm);
   }
+
+  enableSurpriseButton();
+}
+
+function enableSurpriseButton() {
+  var surpriseButton = document.getElementById("surpriseButton");
+
+  if (!surpriseButton) {
+    return;
+  }
+
+  surpriseButton.classList.add("is-ready");
+  surpriseButton.addEventListener("click", showJumpscare, { once: true });
+}
+
+function showJumpscare() {
+  if (jumpscareStarted) {
+    return;
+  }
+
+  jumpscareStarted = true;
+
+  var jumpscare = document.getElementById("jumpscare");
+  var audio = document.getElementById("screamAudio");
+  var videoFrame = document.querySelector("#video iframe");
+  var surpriseButton = document.getElementById("surpriseButton");
+
+  if (videoFrame) {
+    videoFrame.remove();
+  }
+
+  if (surpriseButton) {
+    surpriseButton.remove();
+  }
+
+  jumpscare.classList.add("is-active");
+  jumpscare.setAttribute("aria-hidden", "false");
+  screamPlayCount = 0;
+
+  function playScream() {
+    screamPlayCount++;
+    audio.currentTime = 0;
+
+    var playPromise = audio.play();
+    if (playPromise) {
+      playPromise.catch(function () {
+        window.location.href = "apology.html";
+      });
+    }
+  }
+
+  audio.addEventListener("ended", function repeatScream() {
+    if (screamPlayCount < 5) {
+      playScream();
+      return;
+    }
+
+    audio.removeEventListener("ended", repeatScream);
+    window.location.href = "apology.html";
+  });
+
+  playScream();
 }
 
 function openBox() {
