@@ -298,7 +298,7 @@ function showJumpscare() {
   }
 
   audio.addEventListener("ended", function repeatScream() {
-    if (screamPlayCount < 5) {
+    if (screamPlayCount < 2) {
       playScream();
       return;
     }
