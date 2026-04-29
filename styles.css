@@ -66,6 +66,77 @@ body {
   line-height: 0.95;
 }
 
+.jumpscare {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.jumpscare.is-active {
+  display: flex;
+}
+
+.jumpscare img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+.apology-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at top left, rgba(255, 91, 138, 0.45), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(101, 214, 255, 0.45), transparent 30%),
+    #111;
+}
+
+.apology-card {
+  width: min(920px, 94vw);
+  text-align: center;
+}
+
+.apology-message {
+  margin: 0 0 28px;
+  color: #fff7cf;
+  font-family: "Bangers", cursive;
+  font-size: clamp(38px, 8vw, 92px);
+  letter-spacing: 2px;
+  line-height: 1.05;
+  text-shadow:
+    0 4px 0 #ff5b8a,
+    0 0 28px rgba(255, 226, 122, 0.75);
+}
+
+.back-button {
+  display: inline-block;
+  padding: 12px 24px;
+  border: 3px solid #ffe27a;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #65d6ff, #ff5b8a);
+  color: #fff;
+  font-family: "Bangers", cursive;
+  font-size: clamp(22px, 4vw, 34px);
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 6px 0 rgba(91, 44, 20, 0.55),
+    0 0 22px rgba(255, 226, 122, 0.7);
+}
+
+.back-button:hover {
+  filter: brightness(1.08);
+}
+
 #beach,
 #canvas {
   position: absolute;
@@ -149,6 +220,43 @@ body {
   border-radius: 10px;
 }
 
+.surprise-button {
+  position: absolute;
+  top: calc(50% + min(24.2vw, 166px));
+  left: 50%;
+  z-index: 12;
+  display: none;
+  padding: 12px 22px;
+  border: 3px solid #ffe27a;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff5b8a, #ff9f43);
+  color: #fff;
+  cursor: pointer;
+  font-family: "Bangers", cursive;
+  font-size: clamp(20px, 4vw, 30px);
+  letter-spacing: 1px;
+  box-shadow:
+    0 6px 0 rgba(91, 44, 20, 0.55),
+    0 0 22px rgba(255, 226, 122, 0.7);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
+  transform: translateX(-50%);
+}
+
+.surprise-button.is-ready {
+  display: block;
+}
+
+.surprise-button:hover {
+  filter: brightness(1.08);
+}
+
+.surprise-button:active {
+  box-shadow:
+    0 2px 0 rgba(91, 44, 20, 0.55),
+    0 0 18px rgba(255, 226, 122, 0.65);
+  transform: translate(-50%, 4px);
+}
+
 #people {
   position: absolute;
   bottom: 65px;
@@ -185,6 +293,7 @@ body {
 .merrywrap.is-revealed {
   background-color: transparent;
   background-image: none;
+  pointer-events: none;
 }
 
 .reward-title {
@@ -617,6 +726,10 @@ body {
     width: min(62vw, 560px);
   }
 
+  .surprise-button {
+    top: calc(50% + min(17.5vw, 182px));
+  }
+
   .moon {
     right: 230px;
   }
@@ -649,6 +762,12 @@ body {
   #video {
     top: 52%;
     width: 88vw;
+  }
+
+  .surprise-button {
+    top: calc(52% + 32vw);
+    width: min(84vw, 360px);
+    padding: 10px 16px;
   }
 
   .moon {
